@@ -35,7 +35,7 @@ interface StorageInterface
      *
      * @return \Aws\ResultInterface
      */
-    public function putImage($filename, $data, $acl = null, array $options = []);
+    public function putImage($filename, $data, $acl = null, $contentType);
     
     /**
      * @param string $filename
