@@ -1,6 +1,6 @@
 <?php
 
-namespace ctala\yii2\aws\s3;
+namespace CTala;
 
 /**
  * Interface StorageInterface

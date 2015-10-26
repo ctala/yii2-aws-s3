@@ -1,6 +1,6 @@
 <?php
 
-namespace ctala\yii2\aws\s3;
+namespace CTala;
 
 use Aws\S3\MultipartUploader;
 use Aws\S3\S3Client;

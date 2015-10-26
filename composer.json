@@ -23,7 +23,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "ctala\\yii2\\aws\\s3\\": "src/"
+            "CTala\\": "src/"
         }
     },
     "minimum-stability": "stable",
