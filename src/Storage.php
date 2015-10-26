@@ -74,19 +74,21 @@ class Storage extends Component implements StorageInterface {
         }
 
         if (empty($this->region)) {
-            $args = $this->prepareArgs($this->options, [
-                'version' => '2006-03-01',
-                'credentials' => $this->credentials,
-                'debug' => $this->debug,
-            ]);
-        } else {
-            $args = $this->prepareArgs($this->options, [
-                'version' => '2006-03-01',
-                'region' => $this->region,
-                'credentials' => $this->credentials,
-                'debug' => $this->debug,
-            ]);
+            /*
+             * If there is no region selected we use Standar US
+             * All available regions can be found at :
+             * http://docs.aws.amazon.com/general/latest/gr/rande.html
+             */
+            $this->region = "us-east-1";
         }
+        
+        $args = $this->prepareArgs($this->options, [
+            'version' => '2006-03-01',
+            'region' => $this->region,
+            'credentials' => $this->credentials,
+            'debug' => $this->debug,
+        ]);
+
 
 
 
