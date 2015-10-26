@@ -18,7 +18,7 @@ The component currently supports CloudFront (getting a CDN url for an object in 
     'components' => [
         // ...
         's3bucket' => [
-            'class' => \frostealth\yii2\aws\s3\Storage::className(),
+            'class' => \ctala\yii2\aws\s3\Storage::className(),
             'region' => 'your region',
             'credentials' => [ // Aws\Credentials\CredentialsInterface|array|callable
                 'key' => 'your aws s3 key',
@@ -26,7 +26,7 @@ The component currently supports CloudFront (getting a CDN url for an object in 
             ],
             'bucket' => 'your aws s3 bucket',
             'cdnHostname' => 'http://example.cloudfront.net',
-            'defaultAcl' => \frostealth\yii2\aws\s3\Storage::ACL_PUBLIC_READ,
+            'defaultAcl' => \ctala\yii2\aws\s3\Storage::ACL_PUBLIC_READ,
             'debug' => true, // bool|array
         ],
         // ...
