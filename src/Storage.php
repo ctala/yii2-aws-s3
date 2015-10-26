@@ -12,8 +12,8 @@ use yii\base\InvalidConfigException;
  *
  * @package ctala\yii2\aws\s3
  */
-class Storage extends Component implements StorageInterface
-{
+class Storage extends Component implements StorageInterface {
+
     const ACL_PRIVATE = 'private';
     const ACL_PUBLIC_READ = 'public-read';
     const ACL_PUBLIC_READ_WRITE = 'public-read-write';
@@ -64,27 +64,31 @@ class Storage extends Component implements StorageInterface
     /**
      * @throws InvalidConfigException
      */
-    public function init()
-    {
+    public function init() {
         if (empty($this->credentials)) {
             throw new InvalidConfigException('S3 credentials isn\'t set.');
-        }
-
-        if (empty($this->region)) {
-            //DEFAULT REGION WILL BE USED
-            $this->region="us-west-2";
         }
 
         if (empty($this->bucket)) {
             throw new InvalidConfigException('You must set bucket name.');
         }
 
-        $args = $this->prepareArgs($this->options, [
-            'version' => '2006-03-01',
-            'region' => $this->region,
-            'credentials' => $this->credentials,
-            'debug' => $this->debug,
-        ]);
+        if (empty($this->region)) {
+            $args = $this->prepareArgs($this->options, [
+                'version' => '2006-03-01',
+                'credentials' => $this->credentials,
+                'debug' => $this->debug,
+            ]);
+        } else {
+            $args = $this->prepareArgs($this->options, [
+                'version' => '2006-03-01',
+                'region' => $this->region,
+                'credentials' => $this->credentials,
+                'debug' => $this->debug,
+            ]);
+        }
+
+
 
         $this->client = new S3Client($args);
     }
@@ -92,8 +96,7 @@ class Storage extends Component implements StorageInterface
     /**
      * @return S3Client
      */
-    public function getClient()
-    {
+    public function getClient() {
         return $this->client;
     }
 
@@ -105,8 +108,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return \Aws\ResultInterface
      */
-    public function put($filename, $data, $acl = null, array $options = [])
-    {
+    public function put($filename, $data, $acl = null, array $options = []) {
         $args = $this->prepareArgs($options, [
             'Bucket' => $this->bucket,
             'Key' => $filename,
@@ -123,8 +125,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return \Aws\ResultInterface
      */
-    public function get($filename, $saveAs = null)
-    {
+    public function get($filename, $saveAs = null) {
         $args = $this->prepareArgs([
             'Bucket' => $this->bucket,
             'Key' => $filename,
@@ -140,8 +141,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return bool
      */
-    public function exist($filename, array $options = [])
-    {
+    public function exist($filename, array $options = []) {
         return $this->getClient()->doesObjectExist($this->bucket, $filename, $options);
     }
 
@@ -150,11 +150,10 @@ class Storage extends Component implements StorageInterface
      *
      * @return \Aws\ResultInterface
      */
-    public function delete($filename)
-    {
+    public function delete($filename) {
         return $this->execute('DeleteObject', [
-            'Bucket' => $this->bucket,
-            'Key' => $filename,
+                    'Bucket' => $this->bucket,
+                    'Key' => $filename,
         ]);
     }
 
@@ -163,8 +162,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return string
      */
-    public function getUrl($filename)
-    {
+    public function getUrl($filename) {
         return $this->getClient()->getObjectUrl($this->bucket, $filename);
     }
 
@@ -174,8 +172,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return string
      */
-    public function getPresignedUrl($filename, $expires)
-    {
+    public function getPresignedUrl($filename, $expires) {
         $command = $this->getClient()->getCommand('GetObject', ['Bucket' => $this->bucket, 'Key' => $filename]);
         $request = $this->getClient()->createPresignedRequest($command, $expires);
 
@@ -187,8 +184,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return string
      */
-    public function getCdnUrl($filename)
-    {
+    public function getCdnUrl($filename) {
         return $this->cdnHostname . '/' . $filename;
     }
 
@@ -198,8 +194,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return \Aws\ResultInterface
      */
-    public function getList($prefix = null, array $options = [])
-    {
+    public function getList($prefix = null, array $options = []) {
         $args = $this->prepareArgs($options, [
             'Bucket' => $this->bucket,
             'Prefix' => $prefix,
@@ -216,14 +211,9 @@ class Storage extends Component implements StorageInterface
      *
      * @return \Aws\ResultInterface
      */
-    public function upload($filename, $source, $acl = null, array $options = [])
-    {
+    public function upload($filename, $source, $acl = null, array $options = []) {
         return $this->getClient()->upload(
-            $this->bucket,
-            $filename,
-            $source,
-            !empty($acl) ? $acl : $this->defaultAcl,
-            $options
+                        $this->bucket, $filename, $source, !empty($acl) ? $acl : $this->defaultAcl, $options
         );
     }
 
@@ -238,12 +228,7 @@ class Storage extends Component implements StorageInterface
      * @return \Aws\ResultInterface
      */
     public function multipartUpload(
-        $filename,
-        $source,
-        $concurrency = null,
-        $partSize = null,
-        $acl = null,
-        array $options = []
+    $filename, $source, $concurrency = null, $partSize = null, $acl = null, array $options = []
     ) {
         $args = $this->prepareArgs($options, [
             'bucket' => $this->bucket,
@@ -264,8 +249,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return \Aws\ResultInterface
      */
-    protected function execute($name, array $args)
-    {
+    protected function execute($name, array $args) {
         $command = $this->getClient()->getCommand($name, $args);
 
         return $this->getClient()->execute($command);
@@ -276,8 +260,7 @@ class Storage extends Component implements StorageInterface
      *
      * @return array
      */
-    protected function prepareArgs(array $a)
-    {
+    protected function prepareArgs(array $a) {
         $result = [];
         $args = func_get_args();
 
@@ -288,4 +271,5 @@ class Storage extends Component implements StorageInterface
 
         return $result;
     }
+
 }
