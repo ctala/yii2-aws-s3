@@ -71,7 +71,8 @@ class Storage extends Component implements StorageInterface
         }
 
         if (empty($this->region)) {
-            throw new InvalidConfigException('Region isn\'t set.');
+            //DEFAULT REGION WILL BE USED
+            $this->region="us-west-2";
         }
 
         if (empty($this->bucket)) {

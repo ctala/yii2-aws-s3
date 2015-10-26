@@ -9,7 +9,7 @@ The component currently supports CloudFront (getting a CDN url for an object in 
 ## Installation
 1. Run the [Composer](http://getcomposer.org/download/) command to install the latest stable version:
     ```
-    composer require frostealth/yii2-aws-s3
+    composer require ctala/yii2-aws-s3
     ```
 
 2. Add component to `config/main.php`
