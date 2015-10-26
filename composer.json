@@ -23,7 +23,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "frostealth\\yii2\\aws\\s3\\": "src/"
+            "ctala\\yii2\\aws\\s3\\": "src/"
         }
     },
     "minimum-stability": "stable",
