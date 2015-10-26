@@ -81,7 +81,7 @@ class Storage extends Component implements StorageInterface {
              */
             $this->region = "us-east-1";
         }
-        
+
         $args = $this->prepareArgs($this->options, [
             'version' => '2006-03-01',
             'region' => $this->region,
@@ -117,6 +117,18 @@ class Storage extends Component implements StorageInterface {
             'Body' => $data,
             'ACL' => !empty($acl) ? $acl : $this->defaultAcl,
         ]);
+
+        return $this->execute('PutObject', $args);
+    }
+
+    public function putImage($filename, $data, $acl = null, $contentType = null) {
+        $args = [
+            'Bucket' => $this->bucket,
+            'Key' => $filename,
+            'Body' => $data,
+            'ACL' => !empty($acl) ? $acl : $this->defaultAcl,
+            'ContentType' => !empty($contentType) ? $contentType : 'image/jpeg',
+        ];
 
         return $this->execute('PutObject', $args);
     }
