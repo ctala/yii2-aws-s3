@@ -218,6 +218,26 @@ class Storage extends Component implements StorageInterface {
     }
 
     /**
+     * @return \Aws\ResultInterface
+     */
+    public function getIteratorAll() {
+        $args = array(
+            'Bucket' => $this->bucket
+        );
+        return $this->execute('ListObjects', $args);
+    }
+
+    public function createFolder($filename) {
+        $args = [
+            'Bucket' => $this->bucket,
+            'Key' => $this->folderFormatter($filename),
+            'ACL' => !empty($acl) ? $acl : $this->defaultAcl,
+        ];
+
+        return $this->execute('PutObject', $args);
+    }
+
+    /**
      * @param string $filename
      * @param mixed $source
      * @param string $acl
@@ -284,6 +304,15 @@ class Storage extends Component implements StorageInterface {
         }
 
         return $result;
+    }
+
+    protected function folderFormatter($folderName) {
+        if (substr($folderName, -1) === '/') {
+            return $folderName;
+        } else {
+            $folderName = $folderName . "/";
+            return $folderName;
+        }
     }
 
 }

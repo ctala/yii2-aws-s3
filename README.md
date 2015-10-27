@@ -103,3 +103,7 @@ foreach ($result['Contents'] as $object) {
     echo $object['Key'] . PHP_EOL;
 }
 ```
+
+##ChangeLog
+
+* 0.6 : Added Create Folder, Added Iterator for All files.
